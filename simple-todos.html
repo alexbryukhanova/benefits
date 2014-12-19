@@ -1,0 +1,78 @@
+<head>
+  <title>simple-todos</title>
+</head>
+
+<body>
+<div class="container-fluid">
+    {{ > profile}}
+    {{ > benefitsDetails}}
+</div>
+</body>
+
+<template name="profile">
+    <div class="jumbotron profile">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hexagon" style="background-image: url('{{user.user_picture}}')">
+                    <div class="hexTop"></div>
+                    <div class="hexBottom"></div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <h1 class="profile-name">Hello, {{user.user_name}}</h1>
+
+                <div class="row">
+                    {{ #each plans }}
+                    {{ > planSummary }}
+                    {{ /each }}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="benefitsDetails">
+    <div class="benefits-details">
+        <div class="container-fluid">
+            <div class="close"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <label class="label label-{{plan.labelColour}}">{{ plan.planType }}</label>
+                    <h1>{{ plan.planName }}</h1>
+                </div>
+            </div>
+            <div class="benefits-contact">
+                <h4>Provider Contact Information</h4>
+                <p>
+                    <strong>Phone Number</strong><br />
+                    {{contactInfo.phone}}
+                </p>
+                <p>
+                    <strong>Address</strong><br />
+                    {{contactInfo.address}}
+                </p>
+                <!-- add Google Maps piece -->
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="planSummary">
+    <div class="col-lg-4 summary-col">
+        <div class="summary">
+            <label class="label label-{{labelColour}}">{{ planType }}</label>
+            <h4>{{ planName }}</h4>
+            <table class="table">
+                <tr>
+                    <td>January, 2015 deduction</td>
+                    <td><strong>$283.32</strong></td>
+                </tr>
+            </table>
+            <!--<div class="progress">-->
+                <!--<div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">-->
+                    <!--$45-->
+                <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+</template>
