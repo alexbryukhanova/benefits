@@ -1,7 +1,7 @@
 BenefitsPlan = (function() {
     var constructor = function(data) {
-        //this.planType = data.typeCodeName;
-        //this.planName = data.electionDetails[0].values[0];
+        this.planType = data.typeCodeName;
+        this.planName = data.electionDetails[0].values[0];
     };
     constructor.prototype.labelColour = "default";
 
@@ -22,37 +22,21 @@ BenefitsPlan = (function() {
         };
     };
 
-    constructor.prototype.testParent = function () {
-        alert("Parent!");
-    };
-
     return constructor;
 })();
 
 MedicalPlan = (function(_super) {
-    function tmp() { }
-    tmp.prototype = Object.create(_super.prototype);
-    var constructor = new tmp();
-
-//    var constructor = function(planData) {
-//        this.prototype = new BenefitsPlan(planData);
-//        _super.call(this, planData);
-//
-//        this.test = function() {
-//            alert("Just testing");
-//        }
-//        this.testString = "Just testing";
-//    }
-
-    constructor.prototype.testChild = function () {
-        alert("Parent!");
-    };
+    var constructor = function(planData) {
+        BenefitsPlan.call(this, planData);
+    }
+    constructor.prototype = Object.create(BenefitsPlan.prototype);
+    constructor.prototype.constructor = constructor.constructor;
 
     // code goes here
     constructor.prototype.labelColour = "danger";
 
     return constructor;
-})(BenefitsPlan);
+})();
 
 DentalPlan = (function(_super) {
     var constructor = function(planData) {

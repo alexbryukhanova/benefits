@@ -1,9 +1,4 @@
 if (Meteor.isClient) {
-    var child = new MedicalPlan();
-    child.testParent();
-    child.testChild();
-
-
     var plans = new Meteor.Collection(null);
 
     var planData = HTTP.get("https://test-api.adp.com/benefits/v1/associates/G4O73G9Z62SL2NFM/benefit-elections",
