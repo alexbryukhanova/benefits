@@ -1,0 +1,180 @@
+<head>
+  <title>simple-todos</title>
+</head>
+
+<body>
+<div class="container-fluid">
+    {{ > profile}}
+    {{ > benefitsDetails}}
+</div>
+</body>
+
+<template name="profile">
+    <div class="jumbotron profile">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="hexagon" style="background-image: url('{{user.user_picture}}')">
+                    <div class="hexTop"></div>
+                    <div class="hexBottom"></div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <h1 class="profile-name">Hello, {{user.user_name}}</h1>
+
+                <div class="row">
+                    {{ #each plans }}
+                    {{ > planSummary }}
+                    {{ /each }}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="benefitsDetails">
+    <div class="benefits-details">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="close benefits-sidebar">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        <span class="sr-only">Close</span>
+                    </div>
+                    <label class="label label-{{plan.labelColour}}">{{ plan.planType }}</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1>{{ plan.planName }}</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Account Activity</h4>
+
+                                    {{ #if plan.spending }}
+                                    <table class="table">
+                                        {{ #each planActivity }}
+                                        {{ >fsaActivity }}
+                                        {{ /each }}
+                                    </table>
+                                    {{ else }}
+                                        {{ >deductionTemplate plan.deduction }}
+                                    {{ /if }}
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Appointments</h4>
+                                    {{ #if appointments }}
+                                    {{ else }}
+                                        <p><em class="text-muted">No upcoming appointments</em></p>
+                                    {{ /if }}
+
+                                    <p><h5>Find providers</h5></p>
+                                    <form id="providersSearch">
+                                        <div class="form-group">
+                                            <label for="providersSearchString" class="control-label">
+                                                Provider, condition, or specialization keyword
+                                            </label>
+                                            <input type="text" class="form-control" id="providersSearchString" placeholder="Search query" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="postCode" class="control-label">Area code</label>
+                                            <input type="text" class="form-control" id="postCode" placeholder="Postal Code" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Find professionals</button>
+                                    </form>
+
+                                    <div class="results">
+                                        {{ #if providersSearchResults.message }}
+                                            <h4><em class="text-muted">{{ providersSearchResults.message }}</em></h4>
+                                        {{ else }}
+                                        {{ #each providersSearchResults.list }}
+                                        {{ >aetna }}
+                                        {{ /each }}
+                                        {{ /if }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 benefits-sidebar">
+                    <div class="benefits-contact">
+                        <h4>Provider Contact Information</h4>
+                        <p>
+                            <strong>Phone Number</strong><br />
+                            {{contactInfo.phone}}
+                        </p>
+                        <p>
+                            <strong>Address</strong><br />
+                            {{contactInfo.address}}
+                        </p>
+                        <!-- add Google Maps piece -->
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</template>
+
+<template name="planSummary">
+    <div class="col-lg-4 summary-col">
+        <div class="summary" title="View plan">
+            <div class="close">
+                <span class="glyphicon glyphicon-new-window"></span>
+            </div>
+            <label class="label label-{{labelColour}}">{{ planType }}</label>
+            <h4>{{ planName }}</h4>
+
+            {{ #if deduction }}
+            {{ > deductionTemplate deduction }}
+            {{ /if }}
+
+            {{ #if spending}}
+            {{ > spendingTemplate spending }}
+            {{ /if }}
+        </div>
+    </div>
+</template>
+
+<template name="deductionTemplate">
+    <table class="table">
+        <tr>
+            <td>{{ nextDeductionDate }} deduction</td>
+            <td><strong>{{ nextDeduction }}</strong></td>
+        </tr>
+    </table>
+</template>
+
+<template name="spendingTemplate">
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{currentSpentFraction}}" aria-valuemin="0" aria-valuemax="100" style="width: {{currentSpentFraction}}%;">
+            ${{ currentSpent }}
+        </div>
+    </div>
+</template>
+
+<template name="aetna">
+    <div class="row">
+        <div class="col-md-12 provider">
+            <h4>{{ name }}</h4>
+            <div>{{ address }}</div>
+            <div>{{ phone }}</div>
+            <div><em><strong>Specialization:</strong> {{ specialties }}</em></div>
+        </div>
+    </div>
+</template>
+
+<template name="fsaActivity">
+    <tr>
+        <td>{{ date }}</td>
+        <td>{{ name }}</td>
+        <td><strong>${{ amount }}</strong></td>
+    </tr>
+</template>

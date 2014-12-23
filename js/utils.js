@@ -26,7 +26,7 @@ PlanFactory = (function() {
         }
 
         return plan;
-    }
+    };
 
     return constructor;
 })();

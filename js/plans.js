@@ -101,6 +101,10 @@ BenefitsPlan = (function() {
                     //sortOrder=
     };
 
+    constructor.prototype.getPlanActivity = function () {
+
+    };
+
     return constructor;
 })();
 
@@ -112,7 +116,7 @@ DeductiblePlan = (function(_super) {
             nextDeduction: planData.electionDetails[1].values[0],
             nextDeductionDate: moment().startOf('month').add(1, 'M').format('MMMM YYYY') //next month
         };
-    }
+    };
     constructor.prototype = Object.create(_super.prototype);
     constructor.prototype.constructor = constructor.constructor;
 
@@ -130,7 +134,7 @@ MedicalPlan = (function(_super) {
             nextDeduction: planData.electionDetails[1].values[0],
             nextDeductionDate: moment().startOf('month').add(1, 'M').format('MMMM YYYY') //next month
         };
-    }
+    };
     constructor.prototype = Object.create(_super.prototype);
     constructor.prototype.constructor = constructor.constructor;
 
@@ -148,7 +152,7 @@ DentalPlan = (function(_super) {
             nextDeduction: planData.electionDetails[1].values[0],
             nextDeductionDate: moment().startOf('month').add(1, 'M').format('MMMM YYYY') //next month
         };
-    }
+    };
     constructor.prototype = Object.create(_super.prototype);
     constructor.prototype.constructor = constructor.constructor;
 
@@ -166,7 +170,7 @@ VisionPlan = (function(_super) {
             nextDeduction: planData.electionDetails[1].values[0],
             nextDeductionDate: moment().startOf('month').add(1, 'M').format('MMMM YYYY') //next month
         };
-    }
+    };
     constructor.prototype = Object.create(_super.prototype);
     constructor.prototype.constructor = constructor.constructor;
 
@@ -185,15 +189,57 @@ FSA = (function(_super) {
         var goal = parseInt(goalLabel.substring(1, goalLabel.length-1));
 
         this.spending = {
-            currentSpentLabel: "$" + (Math.round(goal * spent * 100) / 100),
-            currentSpent: spent * 100
+            currentSpent: (goal * spent).toFixed(2),
+            currentSpentFraction: spent * 100,
+            goal: goal
         };
-    }
+    };
     constructor.prototype = Object.create(_super.prototype);
     constructor.prototype.constructor = constructor.constructor;
 
     // code goes here
     constructor.prototype.labelColour = "success";
+
+    constructor.prototype.getPlanActivity = function () {
+        var startOfYear = moment().startOf('year');
+        var dayCount = moment().diff(startOfYear, 'days');
+        var goalCounter = this.spending.goal;
+        var activity = [];
+        activity.push({
+            name: "Store purchase",
+            date: startOfYear.add(Random.fraction() * dayCount, 'd').format('YYYY/MM/DD'),
+            amount: (Random.fraction() * goalCounter).toFixed(2)
+        });
+        goalCounter -= activity[0].amount;
+        dayCount = moment().diff(startOfYear, 'days');
+        activity.push({
+            name: "Store purchase",
+            date: startOfYear.add(Random.fraction() * dayCount, 'd').format('YYYY/MM/DD'),
+            amount: (Random.fraction() * goalCounter).toFixed(2)
+        });
+        goalCounter -= activity[1].amount;
+        dayCount = moment().diff(startOfYear, 'days');
+        activity.push({
+            name: "Procedure",
+            date: startOfYear.add(Random.fraction() * dayCount, 'd').format('YYYY/MM/DD'),
+            amount: (Random.fraction() * goalCounter).toFixed(2)
+        });
+        goalCounter -= activity[2].amount;
+        dayCount = moment().diff(startOfYear, 'days');
+        activity.push({
+            name: "Procedure",
+            date: startOfYear.add(Random.fraction() * dayCount, 'd').format('YYYY/MM/DD'),
+            amount: (Random.fraction() * goalCounter).toFixed(2)
+        });
+        goalCounter -= activity[3].amount;
+        dayCount = moment().diff(startOfYear, 'days');
+        activity.push({
+            name: "Store purchase",
+            date: startOfYear.add(Random.fraction() * dayCount, 'd').format('YYYY/MM/DD'),
+            amount: (Random.fraction() * goalCounter).toFixed(2)
+        });
+        return activity;
+    };
 
     return constructor;
 })(BenefitsPlan);
