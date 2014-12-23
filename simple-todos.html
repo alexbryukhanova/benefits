@@ -34,25 +34,48 @@
 <template name="benefitsDetails">
     <div class="benefits-details">
         <div class="container-fluid">
-            <div class="close"></div>
             <div class="row">
                 <div class="col-md-12">
+                    <button type="button" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <label class="label label-{{plan.labelColour}}">{{ plan.planType }}</label>
                     <h1>{{ plan.planName }}</h1>
                 </div>
             </div>
-            <div class="benefits-contact">
-                <h4>Provider Contact Information</h4>
-                <p>
-                    <strong>Phone Number</strong><br />
-                    {{contactInfo.phone}}
-                </p>
-                <p>
-                    <strong>Address</strong><br />
-                    {{contactInfo.address}}
-                </p>
-                <!-- add Google Maps piece -->
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-4">
+                        <p>Find providers</p>
+                        <form>
+                            <input type="text" class="form-control" id="providersSearchString" placeholder="Search query" />
+                            <input type="text" class="form-control" id="postCode" placeholder="Postal Code" />
+                            <input type="button" class="btn btn-primary" id="providersSearchBtn" value="Find professionals" />
+                        </form>
+
+                        <div class="results">
+                            {{ #if providersSearchResults.message }}
+                                {{ providersSearchResults.message }}
+                            {{ else }}
+                                {{ #each providersSearchResults.list }}
+                                {{ >aetna }}
+                                {{ /each }}
+                            {{ /if }}
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        </div>
+        <div class="benefits-contact col-md-3">
+            <h4>Provider Contact Information</h4>
+            <p>
+                <strong>Phone Number</strong><br />
+                {{contactInfo.phone}}
+            </p>
+            <p>
+                <strong>Address</strong><br />
+                {{contactInfo.address}}
+            </p>
+            <!-- add Google Maps piece -->
         </div>
     </div>
 </template>
@@ -62,17 +85,42 @@
         <div class="summary">
             <label class="label label-{{labelColour}}">{{ planType }}</label>
             <h4>{{ planName }}</h4>
-            <table class="table">
-                <tr>
-                    <td>January, 2015 deduction</td>
-                    <td><strong>$283.32</strong></td>
-                </tr>
-            </table>
-            <!--<div class="progress">-->
-                <!--<div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">-->
-                    <!--$45-->
-                <!--</div>-->
-            <!--</div>-->
+
+            {{ #if deduction }}
+            {{ > deductionTemplate deduction }}
+            {{ /if }}
+
+            {{ #if spending}}
+            {{ > spendingTemplate spending }}
+            {{ /if }}
+        </div>
+    </div>
+</template>
+
+<template name="deductionTemplate">
+    <table class="table">
+        <tr>
+            <td>{{ nextDeductionDate }} deduction</td>
+            <td><strong>{{ nextDeduction }}</strong></td>
+        </tr>
+    </table>
+</template>
+
+<template name="spendingTemplate">
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="{{currentSpent}}" aria-valuemin="0" aria-valuemax="100" style="width: {{currentSpent}}%;">
+            {{ currentSpentLabel }}
+        </div>
+    </div>
+</template>
+
+<template name="aetna">
+    <div class="row">
+        <div class="col-md-12 provider">
+            <h4>{{ name }}</h4>
+            <div>{{ address }}</div>
+            <div>{{ phone }}</div>
+            <div><em><strong>Specialization:</strong> {{ specialties }}</em></div>
         </div>
     </div>
 </template>

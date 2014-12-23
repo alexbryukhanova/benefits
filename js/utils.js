@@ -14,6 +14,12 @@ PlanFactory = (function() {
             case "Vision":
                 plan = new VisionPlan(planData);
                 break;
+            case "Spending Account":
+                plan = new FSA(planData);
+                break;
+            case "Long Term Disability":
+                plan = new DeductiblePlan(planData);
+                break;
             default:
                 plan = new BenefitsPlan(planData);
                 break;
