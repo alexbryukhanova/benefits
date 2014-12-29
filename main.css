@@ -2,6 +2,10 @@
 {
     display: inline-block;
 }
+.profile-img
+{
+    width: 100%;
+}
 .summary {
     background-color: #fff;
     /*border: 1px solid red;*/
@@ -16,7 +20,6 @@
 }
 .summary:hover
 {
-    cursor: hand;
     cursor: pointer;
     -webkit-box-shadow: 1px 1px 1px 0px rgba(204,204,204,0.75);
     -moz-box-shadow: 1px 1px 1px 0px rgba(204,204,204,0.75);
@@ -108,6 +111,7 @@
 
 .hexTop {
     top: -106.0660px;
+    background-color: #0000ff;
 }
 
 .hexTop:after {
@@ -116,6 +120,7 @@
 
 .hexBottom {
     bottom: -106.0660px;
+    background-color: #ffff00;
 }
 
 .hexBottom:after {

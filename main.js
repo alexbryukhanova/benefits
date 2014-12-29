@@ -126,6 +126,8 @@ if (Meteor.isClient) {
                 .css("left", window.pageXOffset+"px")
                 .fadeToggle(750);
             $("body").css("overflow", "auto");
+
+            // Clear all search forms/results
         },
         "submit #providersSearch": function(event, template) {
             var postCode = $("#postCode").val();
@@ -134,7 +136,6 @@ if (Meteor.isClient) {
             submitButton.html('<i class="fa fa-spinner fa-spin"></i> Searching for [' + searchTerm + ']');
             Meteor.call("getProviders", searchTerm, postCode, function success(error, data) {
                 if(data.isSuccess) {
-
                     var providers = $.grep($(data.results), function (e) {
                         return e.id == "providers";
                     });
@@ -201,21 +202,23 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
     Meteor.startup(function () {
         Meteor.methods({
-            getProviders: function (searchString, location) {
+            getProviders: function (searchString, zipCode) {
                 console.log("Searching " + searchString);
+
+                //TODO: There seems to be another/better to do this: https://www.discovermeteor.com/blog/wrapping-npm-packages/
                 Future = Npm.require('fibers/future');
                 var futureResults = new Future();
 
                 var URL = "http://www.aetna.com/dse/search/results?searchQuery=" + searchString.replace(" ", "+") +
-                    "&geoSearch=07302" +
+                    "&geoSearch=" + zipCode +
                     "&pagination.offset=" +
-                    "&zipCode=07302" +
-                    "&geoMainTypeAheadLastQuickSelectedVal=07302" +
+                    "&zipCode=" + zipCode +
+                    "&geoMainTypeAheadLastQuickSelectedVal=" + zipCode +
                     "&modalSelectedPlan=NJDMC" +
                     "&filterValues=";
 
                 HTTP.get(URL,
-                    { timeout: 300 },
+                    //{ timeout: 300 },
                     function (err, response) {
                         if(err) {
                             console.log(err);
@@ -225,41 +228,38 @@ if (Meteor.isServer) {
                             futureResults.return({ isSuccess: true, results: response.content });
                             return;
                         }
-//                        var results = $(response.content).find("#providers");
-                        var results = $(response.content).find("#providers");
-                        if(results.status === "OK") {
-                            console.log(results);
-                            futureResults.return(results);
-                        } else {
-                            futureResults.return("Can't find anything");
-                        }
                     }
                 );
+                return futureResults.wait();
+            },
+            getNearby: function(searchString, location, searchType) {
+                Future = Npm.require('fibers/future');
+                var futureResults = new Future();
 
+                HTTP.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + postCode + "&key=AIzaSyDQVpXtlofn54NisnHdzf4g7bn-n7tiQCU",
+                    function done(err, response) {
+                        console.log(err);
+                        var results = JSON.parse(response.content);
+                        var location = {
+                            lat: results.results[0].geometry.location.lat,
+                            lng: results.results[0].geometry.location.lng
+                        };
 
-//                HTTP.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDQVpXtlofn54NisnHdzf4g7bn-n7tiQCU&location=40.7218318,-74.0447003&types=doctor&keyword=annual+checkup&radius=3000",
-//                HTTP.get("https://maps.googleapis.com/maps/api/geocode/json?address=" + postCode + "&key=AIzaSyDQVpXtlofn54NisnHdzf4g7bn-n7tiQCU",
-//                    function done(err, response) {
-//                        console.log(err);
-//                        var results = JSON.parse(response.content);
-//                        var location = {
-//                            lat: results.results[0].geometry.location.lat,
-//                            lng: results.results[0].geometry.location.lng
-//                        };
-//
-//                        var URL = selectedPlan.get().getQueryString(searchString, location);
-//                        HTTP.get(URL,
-//                            function (err, response) {
-//                                console.log(err);
-//                                var results = JSON.parse(response.content);
-//
-//                                futureResults.return({ isSuccess: true, results: results });
-//                            }
-//                        );
-//                    });
+                        HTTP.get("https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=AIzaSyDQVpXtlofn54NisnHdzf4g7bn-n7tiQCU" +
+                                "&location=" + location.lat + "," + location.lng +
+                                "&types=" + searchType +
+                                "&keyword=" + searchString +
+                                "&radius=3000",
+                            function (err, response) {
+                                console.log(err);
+                                var results = JSON.parse(response.content);
+
+                                futureResults.return({ isSuccess: true, results: results });
+                            }
+                        );
+                    });
                 return futureResults.wait();
             }
         });
-
     });
 }
