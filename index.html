@@ -13,7 +13,11 @@
     <div class="jumbotron profile">
         <div class="row">
             <div class="col-md-3">
-                <img src="{{user.user_picture}}" class="img-circle profile-img" />
+                <img src="{{user.user_picture}}"
+                     class="col-xs-offset-3 col-xs-6
+                            col-sm-offset-4 col-sm-4
+                            col-md-offset-0 col-md-12
+                            img-circle profile-img" />
                 <!--<div class="hexagon" style="background-image: url('{{user.user_picture}}')">-->
                     <!--<div class="hexTop"></div>-->
                     <!--<div class="hexBottom"></div>-->
@@ -45,65 +49,24 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h1>{{ plan.planName }}</h1>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h4>Account Activity</h4>
-
-                                    {{ #if plan.spending }}
-                                    <table class="table">
-                                        {{ #each planActivity }}
-                                        {{ >fsaActivity }}
-                                        {{ /each }}
-                                    </table>
-                                    {{ else }}
-                                        {{ >deductionTemplate plan.deduction }}
-                                    {{ /if }}
-                                </div>
-                                <div class="col-md-6">
-                                    <h4>Appointments</h4>
-                                    {{ #if appointments }}
-                                    {{ else }}
-                                        <p><em class="text-muted">No upcoming appointments</em></p>
-                                    {{ /if }}
-
-                                    <p><h5>Find providers</h5></p>
-                                    <form id="providersSearch">
-                                        <div class="form-group">
-                                            <label for="providersSearchString" class="control-label">
-                                                Provider, condition, or specialization keyword
-                                            </label>
-                                            <input type="text" class="form-control" id="providersSearchString" placeholder="Search query" />
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="postCode" class="control-label">Area code</label>
-                                            <input type="text" class="form-control" id="postCode" placeholder="Postal Code" />
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Find professionals</button>
-                                    </form>
-
-                                    <div class="results">
-                                        {{ #if providersSearchResults.message }}
-                                            <h4><em class="text-muted">{{ providersSearchResults.message }}</em></h4>
-                                        {{ else }}
-                                        {{ #each providersSearchResults.list }}
-                                        {{ >aetna }}
-                                        {{ /each }}
-                                        {{ /if }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-md-12">
+                    <h1>{{ plan.planName }}</h1>
                 </div>
-                <div class="col-md-3 benefits-sidebar">
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-5">
+                    <h4>Account Activity</h4>
+
+                    {{ #if plan.spending }}
+                    <table class="table">
+                        {{ #each planActivity }}
+                        {{ >fsaActivity }}
+                        {{ /each }}
+                    </table>
+                    {{ else }}
+                        {{ >deductionTemplate plan.deduction }}
+                    {{ /if }}
+
                     <div class="benefits-contact">
                         <h4>Provider Contact Information</h4>
                         <p>
@@ -117,15 +80,45 @@
                         <!-- add Google Maps piece -->
                     </div>
                 </div>
+                <div class="col-md-8 col-sm-7">
+                    <h4>Appointments</h4>
+                    {{ #if appointments }}
+                    {{ else }}
+                        <p><em class="text-muted">No upcoming appointments</em></p>
+                    {{ /if }}
 
+                    <p><h5>Find providers</h5></p>
+                    <form id="providersSearch">
+                        <div class="form-group">
+                            <label for="providersSearchString" class="control-label">
+                                Provider, condition, or specialization keyword
+                            </label>
+                            <input type="text" class="form-control" id="providersSearchString" placeholder="Search query" />
+                        </div>
+                        <div class="form-group">
+                            <label for="postCode" class="control-label">Area code</label>
+                            <input type="text" class="form-control" id="postCode" placeholder="Postal Code" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Find professionals</button>
+                    </form>
+
+                    <div class="results">
+                        {{ #if providersSearchResults.message }}
+                            <h4><em class="text-muted">{{ providersSearchResults.message }}</em></h4>
+                        {{ else }}
+                        {{ #each providersSearchResults.list }}
+                        {{ >aetna }}
+                        {{ /each }}
+                        {{ /if }}
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
 </template>
 
 <template name="planSummary">
-    <div class="col-md-4 summary-col">
+    <div class="col-sm-6 col-md-4 summary-col">
         <div class="summary" title="View plan">
             <div class="close">
                 <span class="glyphicon glyphicon-new-window"></span>
@@ -148,7 +141,7 @@
     <table class="table">
         <tr>
             <td>{{ nextDeductionDate }} deduction</td>
-            <td><strong>{{ nextDeduction }}</strong></td>
+            <td class="text-right"><strong>{{ nextDeduction }}</strong></td>
         </tr>
     </table>
 </template>
@@ -176,6 +169,6 @@
     <tr>
         <td>{{ date }}</td>
         <td>{{ name }}</td>
-        <td><strong>${{ amount }}</strong></td>
+        <td class="text-right"><strong>${{ amount }}</strong></td>
     </tr>
 </template>

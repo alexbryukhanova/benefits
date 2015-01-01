@@ -17,7 +17,7 @@ if (Meteor.isClient) {
             for (var i = 0; i < elections.length; i++) {
                 plans.insert(plansFactory.getPlan(elections[i]));
             }
-            selectedPlan.set(plans.find().fetch()[5]);
+            //selectedPlan.set(plans.find().fetch()[5]);
         }
     );
     Template.profile.helpers({

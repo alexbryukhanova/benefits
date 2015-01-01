@@ -4,7 +4,7 @@
 }
 .profile-img
 {
-    width: 100%;
+    //width: 100%;
 }
 .summary {
     background-color: #fff;
@@ -53,19 +53,11 @@
 {
     padding-bottom: 15px;
 }
-.benefits-sidebar
-{
-    position: absolute;
-    right: 15px;
-    z-index: 2000;
-}
 .benefits-contact
 {
     background-color: #ccc;
     padding: 15px;
     margin-top: 15px;
-    margin-bottom: 15px;
-    margin-left: 15px;
 }
 
 /* Profile image */
