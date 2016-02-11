@@ -190,7 +190,7 @@ FSA = (function(_super) {
 
         this.spending = {
             currentSpent: (goal * spent).toFixed(2),
-            currentSpentFraction: spent * 100,
+            currentSpentFraction: spent * 10,
             goal: goal
         };
     };
